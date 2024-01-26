@@ -3,14 +3,18 @@ use crate::{array2d::Error, cell::Cell, vector2::Vector2, Array2D};
 
 pub struct CellGrid {
     cell_size: usize,
-    array: Array2D<Cell>
+    array: Array2D<Cell>,
+    num_updating_cells: u32,
+    num_updated_cells: u32
 }
 
 impl CellGrid {
     pub fn new(size: Vector2<usize>, cell_size: usize) -> Self {
         return Self {
             cell_size,
-            array: Array2D::filled_with(size, Cell::empty())
+            array: Array2D::filled_with(size, Cell::empty()),
+            num_updating_cells: 0,
+            num_updated_cells: 0,
         }
     }
 
@@ -27,29 +31,43 @@ impl CellGrid {
         }
     }
 
+    pub fn set_if_not_empty(&mut self, position: &Vector2<usize>, cell: Cell) {
+        if let Some(old_cell) = self.array.get_from_vec(position) {
+            if old_cell.empty == false {
+                let _ = self.set(position, cell);
+            }
+        }
+    }
+
     pub fn simulate(&mut self, delta: f32) {
         let array_ref = self.array.clone();
         let mut mut_array_ref = self.array.clone();
 
         let cells_to_update = mut_array_ref.iter_mut().filter(|cell| {
-            return cell.empty == false;
+            if cell.empty == false {
+                return true;
+            };
+            return false;
         });
-
+        
+        self.num_updating_cells = 0;
+        self.num_updated_cells = 0;
         for cell in cells_to_update {
 
             let old_cell_pos = cell.position;
 
             let result = cell.simulate(&array_ref,delta);
-            let _ = self.array.set_at_vec(&cell.position, *cell);
+            //let _ = self.array.set_at_vec(&cell.position, *cell);
 
             if let Some(new_cell_pos) = result {
-                let _ = self.set(&old_cell_pos, Cell::empty());
+                let _ = self.set_if_not_empty(&old_cell_pos, Cell::empty());
                 let _ = self.set_if_empty(&new_cell_pos, *cell);
             }
+            self.num_updating_cells += 1;
         }
     }
 
-    pub fn draw(&self) {
+    pub fn draw(&self, debug: bool) {
         for cell in self.array.iter() {
             let cell_size = self.cell_size as f32;
             let cell_pos_x = cell.position.x as f32;
@@ -62,6 +80,10 @@ impl CellGrid {
                 cell_size,
                 cell.color
             );
+        }
+
+        if debug == true {
+            draw_text(self.num_updating_cells.to_string().as_str(), 10., 10., 16., WHITE);
         }
     }
 }

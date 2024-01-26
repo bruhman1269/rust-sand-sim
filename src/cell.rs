@@ -60,7 +60,6 @@ impl Cell {
         if self.subposition > 1. {
             let subpos_floor = f32::floor(self.subposition);
             self.position.add_self_vector(&Vector2::new(0 as usize, subpos_floor as usize));
-            //self.subposition -= subpos_floor;
             self.subposition -= subpos_floor;
         }
 

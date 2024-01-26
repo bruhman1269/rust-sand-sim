@@ -39,7 +39,7 @@ async fn main() {
         }
 
         grid.simulate(delta);
-        grid.draw();
+        grid.draw(true);
 
         next_frame().await;
     }

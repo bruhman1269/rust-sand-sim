@@ -1,1 +1,1 @@
-Hello this is the rust sand sim
+A basic sand simulation written in Rust. The source code probably isn't very elegant or esoteric, but I'm using this as a simple starter project to help me learn Rust.

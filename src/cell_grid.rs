@@ -57,11 +57,13 @@ impl CellGrid {
             let old_cell_pos = cell.position;
 
             let result = cell.simulate(&array_ref,delta); 
-
+            
             if let Some(new_cell_pos) = result {
                 let _ = self.set_if_not_empty(&old_cell_pos, Cell::empty());
                 let _ = self.set_if_empty(&new_cell_pos, *cell);
                 self.num_updated_cells += 1;
+            } else {
+                let _ = self.array.set_at_vec(&cell.position, *cell);
             }
             self.num_updating_cells += 1;
         }

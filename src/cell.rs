@@ -52,7 +52,7 @@ impl Cell {
     pub fn simulate(&mut self, array_ref: &Array2D<Cell>, delta: f32) -> Option<Vector2<usize>> {
         let previous_position = self.position;
         self.subposition += self.falling_speed * delta;
-        
+
         if self.subposition > 1. {
             let subpos_floor = f32::floor(self.subposition);
             let subpos_floor_usize = subpos_floor as usize;

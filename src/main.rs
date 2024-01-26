@@ -10,16 +10,15 @@ use cell_grid::CellGrid;
 use cell::Cell;
 use array2d::Array2D;
 
-const SCREEN_SIZE: Vector2<usize> = Vector2::new(900, 600);
+const SCREEN_SIZE: Vector2<usize> = Vector2::new(600, 600);
 const CELL_SIZE: usize = 5;
-const DRAW_SIZE: Vector2<usize> = Vector2::new(10, 10);
+const DRAW_SIZE: Vector2<usize> = Vector2::new(3, 3);
 
 #[macroquad::main("SandSim")]
 async fn main() {
 
     // Create new array of cells
     let mut grid = CellGrid::new(SCREEN_SIZE.div_num(CELL_SIZE), CELL_SIZE);
-    
     request_new_screen_size(SCREEN_SIZE.x as f32, SCREEN_SIZE.y as f32);
 
     loop {
@@ -33,7 +32,7 @@ async fn main() {
             for x in 0..DRAW_SIZE.x {
                 for y in 0..DRAW_SIZE.y {
                     let position = mouse_pos.add_vector(&Vector2::new(x, y));
-                    let _ = grid.set_if_empty(&position, Cell::new(position, 70.));
+                    let _ = grid.set_if_empty(&position, Cell::new(position, 10.));
                 }
             }
         }
@@ -42,7 +41,7 @@ async fn main() {
         grid.simulate(delta);
         grid.draw(true);
 
-        draw_text(format!("FPS: {}", 1. / delta).as_str(), 16., 48., 16., GREEN);
+        draw_text(format!("FPS: {}", get_fps()).as_str(), 16., 48., 16., GREEN);
     
         next_frame().await;
     }

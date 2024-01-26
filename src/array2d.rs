@@ -8,6 +8,7 @@ pub enum Error {
     IndexOutOfBounds
 }
 
+#[derive(Clone)]
 pub struct Array2D<T> {
     size: Vector2<usize>,
     array: Vec<T>,
@@ -15,6 +16,14 @@ pub struct Array2D<T> {
 }
 
 impl<T: Copy + Debug> Array2D<T> {
+    // pub fn empty() -> Self {
+    //     return Self {
+    //         size: Vector2::new(0, 0),
+    //         array: vec![],
+    //         total_size: 0
+    //     };
+    // }
+
     pub fn filled_with(size: Vector2<usize>, element: T) -> Self {
         return Self {
             size,
@@ -29,7 +38,7 @@ impl<T: Copy + Debug> Array2D<T> {
 
     pub fn set_at_vec(&mut self, position: &Vector2<usize>, element: T) -> Result<(), Error> {
         let index = self.index_from_vec(position);
-
+        
         if index >= self.total_size {
             return Err(Error::IndexOutOfBounds);
         } 
@@ -46,7 +55,7 @@ impl<T: Copy + Debug> Array2D<T> {
         return self.array.iter();
     }
 
-    pub fn iter_mut(&self) -> IterMut<'_, T> {
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
         return self.array.iter_mut();
     }
 }

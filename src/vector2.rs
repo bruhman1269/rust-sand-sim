@@ -1,4 +1,4 @@
-use std::{ops::{Add, AddAssign, Div, DivAssign}, process::Output, vec};
+use std::ops::{Add, AddAssign, Div, DivAssign, SubAssign, Sub};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Vector2<T> {
@@ -19,7 +19,7 @@ impl<T> Vector2<T> {
     // }
 }
 
-impl<T: DivAssign + Div<Output = T> + AddAssign + Add<Output = T> + Copy> Vector2<T> {
+impl<T: DivAssign + Div<Output = T> + AddAssign + Add<Output = T> + SubAssign + Sub<Output = T>+ Copy> Vector2<T> {
 
     // pub fn div_self_vec(&mut self, other: &Vector2<T>) {
     //     self.x /= other.x;
@@ -31,10 +31,10 @@ impl<T: DivAssign + Div<Output = T> + AddAssign + Add<Output = T> + Copy> Vector
     //     self.y /= num;
     // }
 
-    // pub fn add_self_vector(&mut self, other: &Vector2<T>) {
-    //     self.x += other.x;
-    //     self.y += other.y;
-    // }
+    pub fn add_self_vector(&mut self, other: &Vector2<T>) {
+        self.x += other.x;
+        self.y += other.y;
+    }
 
     // pub fn div_vec(&self, other: Vector2<T>) -> Self {
     //     let x = self.x / other.x;
@@ -48,10 +48,21 @@ impl<T: DivAssign + Div<Output = T> + AddAssign + Add<Output = T> + Copy> Vector
         return Self { x, y };
     }
 
+
     pub fn add_vector(&self, vector: &Vector2<T>) -> Self {
         return Self {
             x: self.x + vector.x,
             y: self.y + vector.y
         };
+    }
+}
+
+impl<T: PartialEq> PartialEq for Vector2<T> {
+    fn eq(&self, other: &Self) -> bool {
+        return self.x == other.x && self.y == other.y;
+    }
+
+    fn ne(&self, other: &Self) -> bool {
+        !self.eq(other)
     }
 }

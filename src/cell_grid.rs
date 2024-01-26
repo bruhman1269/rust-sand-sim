@@ -1,5 +1,5 @@
 use macroquad::prelude::*;
-use crate::{cell::Cell, vector2::Vector2, Array2D};
+use crate::{array2d::Error, cell::Cell, vector2::Vector2, Array2D};
 
 pub struct CellGrid {
     cell_size: usize,
@@ -14,21 +14,46 @@ impl CellGrid {
         }
     }
 
-    pub fn set(&mut self, position: &Vector2<usize>, cell: Cell) {
-        self.array.set_at_vec(position, cell);
+    pub fn set(&mut self, position: &Vector2<usize>, cell: Cell) -> Result<(), Error> {
+        self.array.set_at_vec(position, cell)?;
+        return Ok(());
     }
 
-    pub fn simulate(&mut self) -> Option<()> {
-        for cell in self.array.iter_mut() {
-            let bottom_pos = cell.position.add_vector(&Vector2::new(0, 1));
-            let bottom_cell = self.array.get_from_vec(&bottom_pos)?;
-
-            if bottom_cell.empty == true {
-                
+    pub fn set_if_empty(&mut self, position: &Vector2<usize>, cell: Cell) {
+        if let Some(old_cell) = self.array.get_from_vec(position) {
+            if old_cell.empty == true {
+                let _ = self.set(position, cell);
             }
         }
+    }
 
-        return Some(());
+    pub fn simulate(&mut self, delta: f32) {
+        let array_ref = self.array.clone();
+        let mut mut_array_ref = self.array.clone();
+
+        let cells_to_update = mut_array_ref.iter_mut().filter(|cell| {
+            if cell.empty == false {
+                if let Some(bottom_cell) = array_ref.get_from_vec(
+                    &cell.position.add_vector(&Vector2::new(0 as usize, 1 as usize))
+                ) {
+                    return bottom_cell.empty;
+                }
+            }
+            return false;
+        });
+
+        for cell in cells_to_update {
+
+            let old_cell_pos = cell.position;
+
+            let result = cell.simulate(delta);
+            let _ = self.array.set_at_vec(&cell.position, *cell);
+
+            if let Some(new_cell_pos) = result {
+                let _ = self.set(&old_cell_pos, Cell::empty());
+                let _ = self.set_if_empty(&new_cell_pos, *cell);
+            }
+        }
     }
 
     pub fn draw(&self) {

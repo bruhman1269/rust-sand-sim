@@ -48,6 +48,7 @@ impl<T: Copy + Debug> Array2D<T> {
     }
 
     fn index_from_vec(&self, vector: &Vector2<usize>) -> usize {
+        
         return vector.x + vector.y * self.size.x;
     }
 

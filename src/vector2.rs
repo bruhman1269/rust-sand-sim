@@ -36,6 +36,11 @@ impl<T: DivAssign + Div<Output = T> + AddAssign + Add<Output = T> + SubAssign + 
         self.y += other.y;
     }
 
+    pub fn sub_self_vector(&mut self, other: &Vector2<T>) {
+        self.x -= other.x;
+        self.y -= other.y;
+    }
+
     // pub fn div_vec(&self, other: Vector2<T>) -> Self {
     //     let x = self.x / other.x;
     //     let y = self.y / other.y;

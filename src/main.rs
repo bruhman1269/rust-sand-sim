@@ -12,7 +12,7 @@ use array2d::Array2D;
 
 const SCREEN_SIZE: Vector2<usize> = Vector2::new(900, 600);
 const CELL_SIZE: usize = 5;
-const DRAW_SIZE: Vector2<usize> = Vector2::new(3, 3);
+const DRAW_SIZE: Vector2<usize> = Vector2::new(10, 10);
 
 #[macroquad::main("SandSim")]
 async fn main() {
@@ -27,20 +27,23 @@ async fn main() {
 
         clear_background(BLACK);
 
-        if is_mouse_button_down(MouseButton::Left) {
+        if is_mouse_button_down(MouseButton::Left) || is_key_pressed(KeyCode::Space) {
             let (mouse_x, mouse_y) = mouse_position();
             let mouse_pos = Vector2::new(mouse_x as usize, mouse_y as usize).div_num(CELL_SIZE);
             for x in 0..DRAW_SIZE.x {
                 for y in 0..DRAW_SIZE.y {
                     let position = mouse_pos.add_vector(&Vector2::new(x, y));
-                    let _ = grid.set_if_empty(&position, Cell::new(position, 60.));
+                    let _ = grid.set_if_empty(&position, Cell::new(position, 70.));
                 }
             }
         }
 
+        
         grid.simulate(delta);
         grid.draw(true);
 
+        draw_text(format!("FPS: {}", 1. / delta).as_str(), 16., 48., 16., GREEN);
+    
         next_frame().await;
     }
 }

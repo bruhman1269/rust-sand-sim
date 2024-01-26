@@ -55,6 +55,13 @@ impl<T: DivAssign + Div<Output = T> + AddAssign + Add<Output = T> + SubAssign + 
             y: self.y + vector.y
         };
     }
+
+    pub fn sub_vector(&self, vector: &Vector2<T>) -> Self {
+        return Self {
+            x: self.x - vector.x,
+            y: self.y - vector.y
+        };
+    }
 }
 
 impl<T: PartialEq> PartialEq for Vector2<T> {

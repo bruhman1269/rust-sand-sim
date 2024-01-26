@@ -10,7 +10,7 @@ pub enum Error {
 
 #[derive(Clone)]
 pub struct Array2D<T> {
-    size: Vector2<usize>,
+    pub size: Vector2<usize>,
     array: Vec<T>,
     total_size: usize
 }

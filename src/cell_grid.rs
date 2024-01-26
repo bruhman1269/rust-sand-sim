@@ -71,17 +71,13 @@ impl CellGrid {
 
     pub fn draw(&self, debug: bool) {
         for cell in self.array.iter() {
-            if cell.empty == true {
-                continue;
-            }
-
             let cell_size = self.cell_size as f32;
             let cell_pos_x = cell.position.x as f32;
             let cell_pos_y = cell.position.y as f32;
 
             draw_rectangle(
                 cell_pos_x * cell_size,
-                cell_pos_y * cell_size,
+                (cell_pos_y * cell.subposition) * cell_size,
                 cell_size,
                 cell_size,
                 cell.color

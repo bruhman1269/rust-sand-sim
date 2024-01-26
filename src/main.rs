@@ -33,7 +33,7 @@ async fn main() {
             for x in 0..DRAW_SIZE.x {
                 for y in 0..DRAW_SIZE.y {
                     let position = mouse_pos.add_vector(&Vector2::new(x, y));
-                    let _ = grid.set_if_empty(&position, Cell::new(position, GREEN, 60.));
+                    let _ = grid.set_if_empty(&position, Cell::new(position, 60.));
                 }
             }
         }

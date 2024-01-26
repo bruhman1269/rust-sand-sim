@@ -1,5 +1,5 @@
-use macroquad::color::{Color, colors};
-
+use macroquad::color::{self, colors, Color};
+use rand::Rng;
 use crate::{array2d::Array2D, vector2::Vector2};
 
 #[derive(Copy, Clone, Debug)]
@@ -12,10 +12,11 @@ pub struct Cell {
 }
 
 impl Cell {
-    pub fn new(position: Vector2<usize>, color: Color, falling_speed: f32) -> Self {
+    pub fn new(position: Vector2<usize>, falling_speed: f32) -> Self {
+        let mut rng = rand::thread_rng();
         return Self {
             position,
-            color,
+            color: color::hsl_to_rgb(0.15, 0.48, rng.gen_range(0.34..0.57)),
             falling_speed,
             empty: false,
             subposition: 0.

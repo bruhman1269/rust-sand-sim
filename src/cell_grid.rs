@@ -32,21 +32,14 @@ impl CellGrid {
         let mut mut_array_ref = self.array.clone();
 
         let cells_to_update = mut_array_ref.iter_mut().filter(|cell| {
-            if cell.empty == false {
-                if let Some(bottom_cell) = array_ref.get_from_vec(
-                    &cell.position.add_vector(&Vector2::new(0 as usize, 1 as usize))
-                ) {
-                    return bottom_cell.empty;
-                }
-            }
-            return false;
+            return cell.empty == false;
         });
 
         for cell in cells_to_update {
 
             let old_cell_pos = cell.position;
 
-            let result = cell.simulate(delta);
+            let result = cell.simulate(&array_ref,delta);
             let _ = self.array.set_at_vec(&cell.position, *cell);
 
             if let Some(new_cell_pos) = result {

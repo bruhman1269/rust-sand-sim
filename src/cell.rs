@@ -1,6 +1,6 @@
 use macroquad::color::{Color, colors};
 
-use crate::vector2::Vector2;
+use crate::{array2d::Array2D, vector2::Vector2};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Cell {
@@ -42,15 +42,26 @@ impl Cell {
     //     }
     // }
 
-    pub fn simulate(&mut self, delta: f32) -> Option<Vector2<usize>> {
+    pub fn simulate(&mut self, array_ref: &Array2D<Cell>, delta: f32) -> Option<Vector2<usize>> {
+        // Check if there's a cell below
+        if let Some(bottom_cell) = array_ref.get_from_vec(
+            &self.position.add_vector(&Vector2::new(0usize, 1usize))
+        ) {
+            if bottom_cell.empty == false {
+                return None;
+            }
+        } else {
+            return None;
+        }
+        
         let previous_position = self.position;
         self.subposition += self.falling_speed * delta;
-
+        
         if self.subposition > 1. {
             let subpos_floor = f32::floor(self.subposition);
             self.position.add_self_vector(&Vector2::new(0 as usize, subpos_floor as usize));
             //self.subposition -= subpos_floor;
-            self.subposition = 0.;
+            self.subposition -= subpos_floor;
         }
 
         if previous_position != self.position {

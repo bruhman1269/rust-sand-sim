@@ -64,7 +64,7 @@ impl Cell {
                     self.position = Vector2::new(self.position.x, array_ref.size.y - 1usize);
                 }
             } else {
-                self.position.add_self_vector(&Vector2::new(0 as usize, subpos_floor_usize));                
+                self.position.add_self_vector(&Vector2::new(0usize, subpos_floor_usize));                
             }
             self.subposition -= subpos_floor;
         }
